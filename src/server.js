@@ -13,7 +13,7 @@ export function setupServer() {
   const app = express();
 
 
-  app.use(logger);
+  // app.use(logger);
   app.use(cors());
   app.use(express.json());
 
