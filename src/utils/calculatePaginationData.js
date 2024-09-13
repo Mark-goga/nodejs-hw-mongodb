@@ -1,9 +1,9 @@
 export default function calculatePaginationData({page , perPage , count}) {
-  const totalPage = Math.ceil(count/perPage);
-  const hasNextPage = page < totalPage;
-  const hasPrevPage = page !== 1;
+  const totalPages = Math.ceil(count/perPage);
+  const hasNextPage = page < totalPages;
+  const hasPreviousPage = page !== 1;
 
   return {
-    totalPage, hasNextPage, hasPrevPage
+    totalPages, hasNextPage, hasPreviousPage
   };
 }
