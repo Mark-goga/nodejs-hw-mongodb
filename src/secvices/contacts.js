@@ -6,15 +6,26 @@ import calculatePaginationData from '../utils/calculatePaginationData.js';
 export const getContacts = async({page ,
    perPage ,
    sortOrder = SORT_ORDER[0] ,
-   sortBy = "_id"
+   sortBy = "_id" ,
+   filter = {}
   }) => {
   const skip = (page - 1) * perPage;
+  const contactsQuery = ContactCollection.find();
+  if(filter.isFavourite !== undefined) {
+    contactsQuery.where("isFavourite").eq(filter.isFavourite);
+  }
 
-  const data = await ContactCollection.find().skip(skip).limit(perPage).sort({[sortBy]: sortOrder});
-  const count = await ContactCollection.find().countDocuments();
+  const data = await contactsQuery.skip(skip).limit(perPage).sort({[sortBy]: sortOrder});
+  const count = await ContactCollection.find().merge(contactsQuery).countDocuments();
+
+  // const data = await ContactCollection.find().skip(skip).limit(perPage).sort({[sortBy]: sortOrder});
+  // const count  = await ContactCollection.find().countDocuments();
+
+  console.log("🚀 ~ count:", count);
+
   const pagitationData = calculatePaginationData({perPage , page , count});
 
-  return {totalItem: count , data , ...pagitationData};
+  return {totalItem: count,perPage ,page , data , ...pagitationData};
 };
 
 
