@@ -7,6 +7,7 @@ import contactsRouter from './routers/contacts.js';
 import errorHandler from './midllewares/errorHandler.js';
 import notFoundHandler from './midllewares/notFoundHandler.js';
 import logger from './midllewares/logger.js';
+import authRouter from './routers/auth.js';
 
 
 export function setupServer() {
@@ -16,7 +17,7 @@ export function setupServer() {
   // app.use(logger);
   app.use(cors());
   app.use(express.json());
-
+  app.use('/auth' , authRouter);
   app.use('/contacts' , contactsRouter);
 
   app.use(notFoundHandler);
