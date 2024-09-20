@@ -24,7 +24,12 @@ const contactSchema = new Schema({
     required: true,
     default: 'personal',
   },
-}, { timestamps: true });
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    require: true,
+  }
+}, { timestamps: true  , versionKey: false});
 
 const ContactCollection = model('Contact', contactSchema);
 

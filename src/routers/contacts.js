@@ -5,8 +5,11 @@ import ctrlWrapper from '../utils/ctrlWrapper.js';
 import validateBody from '../utils/validateBody.js';
 import { contactsAddSchema, contactsPatchSchema } from '../validation/contacts.js';
 import isValidId from '../midllewares/isValidId.js';
+import authenticate from '../midllewares/authenticate.js';
 
 const contactsRouter = Router();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get('/', ctrlWrapper(contactsControler.getAllContactsControler));
 
