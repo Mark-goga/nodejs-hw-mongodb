@@ -38,6 +38,23 @@ export const singinController = async (req , res) => {
   });
 };
 
+export const requestResetEmailController = async (req, res) => {
+  await authServices.requestResetToken(req.body.email);
+  res.status(200).json({
+    message: 'Reset password email has been successfully sent',
+    status: 200,
+    data: {},
+  });
+};
+export const resesPasswordController = async (req , res) => {
+  await authServices.resetPassword(req.body);
+  res.status(200).json({
+    message: 'Password was successfully reset!',
+    stats: 200,
+    data: {},
+  });
+};
+
 export const refreshController = async (req , res) => {
   const {refreshToken , sessionId} = req.cookies;
 
