@@ -14,6 +14,7 @@ import { createJwtToken, verifyJwtToken } from '../utils/jwt.js';
 import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
+import { validGoogleCode } from '../utils/googleOauth2.js';
 
 
 function createSessionData() {
@@ -166,4 +167,24 @@ export const refresh = async ({ refreshToken, sessionId }) => {
 
 export const logout = async (sessionId) => {
   await SessionCollection.deleteOne({ _id: sessionId });
+};
+
+export const singinOrSingupWithGoogle = async (code) => {
+  const loginTicket = await validGoogleCode(code);
+  const payload = loginTicket.getPayload();
+
+  let user = await UserCollection.findOne({email: payload.email});
+  if(!user) {
+    const password = randomBytes(10);
+    const hashPassword = await bcrypt.hash(password , 10);
+    user = await UserCollection.create({
+      email: payload.email,
+      password: hashPassword,
+      name: payload.name,
+    });
+    delete user._doc.password;
+  };
+  const sessionData = createSessionData();
+  const userSeesion = await SessionCollection.create({...sessionData , userId: user._id});
+  return userSeesion;
 };

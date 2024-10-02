@@ -1,5 +1,6 @@
 // import createHttpError from "http-errors";
 import * as authServices from "../secvices/auth.js";
+import { generateGoogleOAuthUri } from "../utils/googleOauth2.js";
 
 function setupSession(res, session) {
   res.cookie("refreshToken", session.refreshToken, {
@@ -79,4 +80,24 @@ export const logoutController = async (req, res) => {
   res.clearCookie("refreshToken");
 
   res.status(204).send();
+};
+export const getGoogleOAuthUriController= async (req , res) => {
+  const uri = generateGoogleOAuthUri();
+  res.status(200).json({
+    message: 'Successfully get google OAuth uri',
+    status: 200,
+    data: {uri}
+  });
+};
+export const loginWithGoogleOAuthController = async (req , res) => {
+  const session = await authServices.singinOrSingupWithGoogle(req.body.code);
+  setupSession(res, session);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfuly login by Google OAuth',
+    data: {
+      accessToken: session.accessToken,
+    }
+  });
 };
